@@ -1,7 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from home.models import Person
-from home.serializers import PeopleSerializer
+from rest_framework.views import APIView
+from home.models import *
+from home.serializers import *
 @api_view(['GET', 'POST', 'PUT'])
 def index(request):
     courses = {
@@ -25,6 +26,34 @@ def index(request):
         return Response(courses)
         
 
+@api_view(['POST'])
+def login(request):
+    data = request.data
+    serializer = LoginSerializer(data = data)
+    
+    if serializer.is_valid():
+        data = serializer.validated_data
+        return Response({'message' : 'success'})
+    
+    return Response(serializer.errors)
+
+
+class PersonAPI(APIView):
+
+    def get(self, request):
+        return Response({'message' : 'this is a get request'})
+    
+    def post(self, request):
+        return Response({'message' : 'this is a post request'})
+    
+    def put(self, request):
+        return Response({'message' : 'this is a put request'})
+
+    def patch(self, request):
+        return Response({'message' : 'this is a patch request'})
+    
+    def delete(self, request):
+        return Response({'message' : 'this is a delete request'})
 @api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def person(request):
     if request.method == 'GET':

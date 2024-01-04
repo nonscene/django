@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from .models import *
 
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+
 class ColorSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -17,9 +24,11 @@ class PeopleSerializer(serializers.ModelSerializer):
         # depth = 1
 
     def get_country(self, obj):
-        color_obj = Color.objects.get(id = obj.color.id)
-        # return "Bharat"
-        # return {'color_name': }
+        if obj.Color:  # Use the correct attribute name 'Color'
+            color_obj = Color.objects.get(id=obj.Color.id)
+            return {'color_name': color_obj.color_name, 'hex_code': '#000'}
+        else:
+            return {'color_name': 'Default Color', 'hex_code': '#000'}
 
     def validate(self, data):
         special_Character = "!@#$%^&*()_+-<>/?,="
