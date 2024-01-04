@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Format Test</title>
+</head>
+<body>
+
+    <label for="dateInput">Enter Date:</label>
+    <input type="date" id="dateInput" placeholder="DD-MM-YYYY">
+
+    <script>
+        // Simulating the browser locale detection
+        var browserLocale = navigator.language || navigator.userLanguage;
+
+        // Check if the browser locale is set to South African English (en-ZA)
+        if (browserLocale === 'en-ZA') {
+            // Set the date input format to DD-MM-YYYY
+            document.getElementById('dateInput').setAttribute('format', 'DD-MM-YYYY');
+        }
+
+        // For testing purposes: Log the current date input format
+        console.log('Current date input format:', document.getElementById('dateInput').getAttribute('format'));
+    </script>
+
+</body>
+</html>

@@ -4,15 +4,22 @@ from .models import *
 class ColorSerializer(serializers.ModelSerializer):
 
     class Meta:
-        models = Color
+        model = Color
         fields = ['color_name', 'id']
 
 class PeopleSerializer(serializers.ModelSerializer):
     Color = ColorSerializer()
+    country = serializers.SerializerMethodField()
+
     class Meta:
         model = Person
         fields = '__all__'
         # depth = 1
+
+    def get_country(self, obj):
+        color_obj = Color.objects.get(id = obj.color.id)
+        # return "Bharat"
+        # return {'color_name': }
 
     def validate(self, data):
         special_Character = "!@#$%^&*()_+-<>/?,="
