@@ -3,11 +3,18 @@
 # from PyQt5.QtWidgets import *
 # from PyQt5.QtWebEngineWidgets import *
 
+# class WebPage(QWebEnginePage):
+#     def __init__(self):
+#         super(WebPage, self).__init__()
+
+#     def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+#         print("Console Message:", level, message, lineNumber, sourceID)
 
 # class MainWindow(QMainWindow):
 #     def __init__(self):
 #         super(MainWindow, self).__init__()
 #         self.browser = QWebEngineView()
+#         self.browser.setPage(WebPage())
 #         self.browser.setUrl(QUrl('http://bing.com'))
 #         self.setCentralWidget(self.browser)
 #         self.showMaximized()
@@ -36,6 +43,13 @@
 #         self.url_bar.returnPressed.connect(self.navigate_to_url)
 #         navbar.addWidget(self.url_bar)
 
+#         dev_mode_btn = QAction('Developer Mode', self)
+#         dev_mode_btn.setCheckable(True)
+#         dev_mode_btn.triggered.connect(self.toggle_developer_mode)
+#         navbar.addAction(dev_mode_btn)
+
+#         self.dev_mode = False
+
 #         self.browser.urlChanged.connect(self.update_url)
 
 #     def navigate_home(self):
@@ -48,11 +62,28 @@
 #     def update_url(self, q):
 #         self.url_bar.setText(q.toString())
 
+#     def toggle_developer_mode(self, enabled):
+#         self.dev_mode = enabled
+#         if enabled:
+#             # Enable developer mode - inject JavaScript code to manipulate the DOM
+#             self.browser.page().runJavaScript(self.get_inject_script())
 
-# app = QApplication(sys.argv)
-# QApplication.setApplicationName('My Cool Browser')
-# window = MainWindow()
-# app.exec_()
+#     def get_inject_script(self):
+#         # This is just a simple example, you may need to modify it based on your needs
+#         return """
+#             // Example: Change the background color of all paragraphs to yellow
+#             var paragraphs = document.getElementsByTagName('p');
+#             for (var i = 0; i < paragraphs.length; i++) {
+#                 paragraphs[i].style.backgroundColor = 'yellow';
+#             }
+#         """
+
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     QApplication.setApplicationName('Css Editor Browser')
+#     window = MainWindow()
+#     app.exec_()
+
 
 import sys
 from PyQt5.QtCore import *
@@ -104,12 +135,20 @@ class MainWindow(QMainWindow):
         dev_mode_btn.triggered.connect(self.toggle_developer_mode)
         navbar.addAction(dev_mode_btn)
 
+        inspect_code_btn = QAction('Inspect Code', self)
+        inspect_code_btn.triggered.connect(self.inspect_code)
+        navbar.addAction(inspect_code_btn)
+
+        open_console_btn = QAction('Open Console', self)
+        open_console_btn.triggered.connect(self.open_console)
+        navbar.addAction(open_console_btn)
+
         self.dev_mode = False
 
         self.browser.urlChanged.connect(self.update_url)
 
     def navigate_home(self):
-        self.browser.setUrl(QUrl('http://bing.com'))
+        self.browser.setUrl(QUrl('http://daily.dev'))
 
     def navigate_to_url(self):
         url = self.url_bar.text()
@@ -133,6 +172,14 @@ class MainWindow(QMainWindow):
                 paragraphs[i].style.backgroundColor = 'yellow';
             }
         """
+
+    def inspect_code(self):
+        # Open the "Inspect Element" dialog
+        self.browser.page().runJavaScript("qt.jQuery('body').contextMenu();")
+
+    def open_console(self):
+        # Open the developer tools console
+        self.browser.page().runJavaScript("qt.jQuery('body').sendkeys('F12');")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
